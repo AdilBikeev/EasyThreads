@@ -9,7 +9,7 @@ namespace ThreadsProject
         /// <summary>
         /// Кол-во запускаемых потоков
         /// </summary>
-        const byte countThread = 5;
+        const int countThread = 5;
 
         /// <summary>
         /// Словарь потоков и соответствующих им времени жизни
@@ -18,8 +18,10 @@ namespace ThreadsProject
 
         /// <summary>
         /// Объект для синхронизации потоков
+        /// 1-ый аргумент отвечает за кол-во потоков, который будет хранить семафор
+        /// 2-ой за максимальное допустимое число потоков, читающий один и тот же метод одновременно
         /// </summary>
-        static object locker = new object();
+        static Semaphore semaphore= new Semaphore(countThread, countThread);
 
         static void Main(string[] args)
         {
@@ -97,12 +99,13 @@ namespace ThreadsProject
         /// </summary>
         private static void TargetThreadMethod()
         {
-            lock (Program.locker)
-            {
-                Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
-                Thread.Sleep(threads[Thread.CurrentThread]);
-                Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
-            }
+            semaphore.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
+
+            Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+            Thread.Sleep(threads[Thread.CurrentThread]);
+            Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
+
+            semaphore.Release();//освобождаем текущий поток
         }
     }
 }
