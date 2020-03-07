@@ -19,7 +19,7 @@ namespace ThreadsProject
         /// <summary>
         /// Объект для синхронизации потоков
         /// </summary>
-        static object locker = new object();
+        static Mutex mutexObj = new Mutex();
 
         static void Main(string[] args)
         {
@@ -97,12 +97,13 @@ namespace ThreadsProject
         /// </summary>
         private static void TargetThreadMethod()
         {
-            lock (Program.locker)
-            {
-                Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
-                Thread.Sleep(threads[Thread.CurrentThread]);
-                Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
-            }
+            mutexObj.WaitOne();//приостанавливаем поток до его освобождения
+
+            Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+            Thread.Sleep(threads[Thread.CurrentThread]);
+            Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
+
+            mutexObj.ReleaseMutex();//освобождаем поток
         }
     }
 }
