@@ -38,9 +38,10 @@ namespace ThreadsProject
         /// </summary>
         private static void RunThreads()
         {
+            TimerCallback callback = new TimerCallback(TargetThreadMethod);
             foreach (var thread in threads.Keys)
             {
-                thread.Start();
+                Timer timer = new Timer(callback, thread, 0, 100);
             }
         }
 
@@ -91,18 +92,27 @@ namespace ThreadsProject
             
             return thread;
         }
-    
+
+        /// <summary>
+        /// Метод для потоков запускаемых через таймер
+        /// </summary>
+        private static void TargetThreadMethod(object obj)
+        {
+            Thread thread = (Thread)obj;
+
+            Console.WriteLine($"Старт потока #{thread.Name}");
+            Thread.Sleep(threads[thread]);
+            Console.WriteLine($"Завершение потока #{thread.Name}");
+        }
+
         /// <summary>
         /// Метод для потоков
         /// </summary>
         private static void TargetThreadMethod()
         {
-            lock (Program.locker)
-            {
-                Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
-                Thread.Sleep(threads[Thread.CurrentThread]);
-                Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
-            }
+            Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+            Thread.Sleep(threads[Thread.CurrentThread]);
+            Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
         }
     }
 }
