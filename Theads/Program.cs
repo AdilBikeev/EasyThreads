@@ -97,11 +97,23 @@ namespace ThreadsProject
         /// </summary>
         private static void TargetThreadMethod()
         {
-            lock (Program.locker)
+            bool acquiredLock = false;// true - если блокировка потока проведена успешно
+
+            try
             {
+                Monitor.Enter(locker, ref acquiredLock); //Блокируем поток
+
                 Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
                 Thread.Sleep(threads[Thread.CurrentThread]);
                 Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine($"TargetThreadMethod exception: {exc.Message}");
+            }
+            finally
+            {
+                if (acquiredLock) Monitor.Exit(locker); // освобождаем объект блокировки
             }
         }
     }
