@@ -40,7 +40,8 @@ namespace ThreadsProject
                 for (int i = 0; i < ThreadModel.countThread; i++)
                 {
                     Console.Write($"Введите время жизни для потока #{i} в секундах: ");
-                    int timeToLive = int.Parse(Console.ReadLine()) * 1000;
+                    int timeToLive = int.Parse(InputHellper.GetNum()) * 1000;
+                    Console.WriteLine();
 
                     ThreadModel.threads.Add(CreateThread(i.ToString()), timeToLive);
                 }
