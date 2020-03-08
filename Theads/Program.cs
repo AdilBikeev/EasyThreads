@@ -25,14 +25,16 @@ namespace ThreadsProject
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Старт основного потока");
+            Start();
+        }
 
+        /// <summary>
+        /// Запускает решение дял лаб. работы
+        /// </summary>
+        private static void Start()
+        {
             InitThreads();
             RunThreads();
-
-            Console.WriteLine("Нажмите любую клавишу для завершение работы программы");
-            Console.ReadKey();
-            Console.WriteLine("Завершение основного потока");
         }
 
         /// <summary>
@@ -60,11 +62,12 @@ namespace ThreadsProject
             {
                 for (int i = 0; i < Program.countThread; i++)
                 {
-                    Console.Write("Введите время жизни для потока в секундах: ");
+                    Console.Write($"Введите время жизни для потока #{i} в секундах: ");
                     int timeToLive = int.Parse(Console.ReadLine()) * 1000;
 
                     threads.Add(CreateThread(i.ToString()), timeToLive);
                 }
+                Console.WriteLine("\n\n\n");
             }
             catch (Exception exc)
             {
@@ -106,6 +109,21 @@ namespace ThreadsProject
             Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
 
             semaphore.Release();//освобождаем текущий поток
+            threads.Remove(Thread.CurrentThread);
+
+            if(threads.Count == 0)
+            {
+                Console.WriteLine("\n\n\n");
+                Console.Write("Продолжить запуск потоков ?[Y/N]: ");
+                var ans = Console.ReadKey().KeyChar;
+                if(ans == 'Y')
+                {
+                    Console.WriteLine("\nНажмите любую клавишу для продолжения");
+                    Console.ReadKey();
+                    Console.Clear();
+                    Start();
+                }
+            }
         }
     }
 }
