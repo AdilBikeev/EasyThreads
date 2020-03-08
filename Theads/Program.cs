@@ -42,9 +42,16 @@ namespace ThreadsProject
         /// </summary>
         private static void RunThreads()
         {
-            foreach (var thread in threads.Keys)
+            try
             {
-                thread.Start();
+                foreach (var thread in threads.Keys)
+                {
+                    thread.Start();
+                }
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine($"RunThreads exception: {exc.Message}");
             }
         }
 
@@ -102,27 +109,34 @@ namespace ThreadsProject
         /// </summary>
         private static void TargetThreadMethod()
         {
-            semaphore.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
-
-            Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
-            Thread.Sleep(threads[Thread.CurrentThread]);
-            Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
-
-            semaphore.Release();//освобождаем текущий поток
-            threads.Remove(Thread.CurrentThread);
-
-            if(threads.Count == 0)
+            try
             {
-                Console.WriteLine("\n\n\n");
-                Console.Write("Продолжить запуск потоков ?[Y/N]: ");
-                var ans = Console.ReadKey().KeyChar;
-                if(ans == 'Y')
+                semaphore.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
+
+                Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+                Thread.Sleep(threads[Thread.CurrentThread]);
+                Console.WriteLine($"Завершение потока #{Thread.CurrentThread.Name}");
+
+                semaphore.Release();//освобождаем текущий поток
+                threads.Remove(Thread.CurrentThread);
+
+                if(threads.Count == 0)
                 {
-                    Console.WriteLine("\nНажмите любую клавишу для продолжения");
-                    Console.ReadKey();
-                    Console.Clear();
-                    Start();
+                    Console.WriteLine("\n\n\n");
+                    Console.Write("Продолжить запуск потоков ?[Y/N]: ");
+                    var ans = Console.ReadKey().KeyChar;
+                    if(ans == 'Y')
+                    {
+                        Console.WriteLine("\nНажмите любую клавишу для продолжения");
+                        Console.ReadKey();
+                        Console.Clear();
+                        Start();
+                    }
                 }
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine($"TargetThreadMethod exception: {exc.Message}");
             }
         }
     }
