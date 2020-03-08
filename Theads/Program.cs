@@ -46,7 +46,7 @@ namespace ThreadsProject
                 {
                     Console.WriteLine("\n\n\n");
                     Console.Write("Продолжить запуск потоков ?[Y/N]: ");
-                    var ans = Console.ReadKey().KeyChar;
+                    var ans = InputHellper.GetAnswer();
                     if(ans == 'Y')
                     {
                         Console.WriteLine("\nНажмите любую клавишу для продолжения");

@@ -19,6 +19,7 @@ namespace ThreadsProject
             do
             {
                 symbol = Console.ReadKey(true).KeyChar;
+                
                 if (char.IsDigit(symbol))
                 {
                     num += symbol;
@@ -56,7 +57,7 @@ namespace ThreadsProject
                     ans = ' ';
                     Backspace();
                 }
-            } while (symbol != '\r' || ans != ' ');
+            } while (symbol != '\r' || ans == ' ');
 
             return ans;
         }
