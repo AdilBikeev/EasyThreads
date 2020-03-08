@@ -33,6 +33,33 @@ namespace ThreadsProject
 
             return num;
         }
+        
+        /// <summary>
+        /// Возвращает валидный ответ [Y/N]
+        /// </summary>
+        /// <returns></returns>
+        internal static char GetAnswer()
+        {
+            char ans = ' ';
+            char symbol;
+
+            do
+            {
+                symbol = Console.ReadKey(true).KeyChar;
+                if (symbol == 'Y' || symbol == 'N')
+                {
+                    ans = symbol;
+                    Console.Write(symbol);
+                }
+                else if (symbol == '\b' && ans != ' ')
+                {
+                    ans = ' ';
+                    Backspace();
+                }
+            } while (symbol != '\r' || ans != ' ');
+
+            return ans;
+        }
 
         private static void Backspace()
         {

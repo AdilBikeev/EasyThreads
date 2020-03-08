@@ -8,7 +8,13 @@ namespace ThreadsProject
     {
         static void Main(string[] args)
         {
+            Console.CancelKeyPress += Console_CancelKeyPress;
             Start();
+        }
+
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            e.Cancel = true;
         }
 
         /// <summary>
