@@ -7,6 +7,8 @@ namespace ThreadsProject
 {
     internal static class ThreadModule
     {
+        private const int maxTimeToLive = 5;
+
         /// <summary>
         /// Запускает все потоки
         /// </summary>
@@ -42,7 +44,7 @@ namespace ThreadsProject
                 for (int i = 0; i < ThreadModel.countThread; i++)
                 {
                     Console.Write($"Время жизни для потока #{i} в секундах: ");
-                    int timeToLive = ((int)(random.NextDouble()*1000 % 20 + 1) * (i + 1)) % 20; // ставим ограничение, чтобы поток не длился более 20 секунд
+                    int timeToLive = ((int)(random.NextDouble()*1000 % 20 + 1) * (i + 1)) % maxTimeToLive; // ставим ограничение, чтобы поток не длился более maxTimeToLive секунд
                     Console.WriteLine(timeToLive);
 
                     ThreadModel.threads.Add(CreateThread(i.ToString()), timeToLive * 1000);
