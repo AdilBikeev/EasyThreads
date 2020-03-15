@@ -9,73 +9,31 @@ namespace ThreadsProject
         /// <summary>
         /// Флаг указывающий потокам о завершении работы
         /// </summary>
-        static bool isTheEnd = false;
+        internal static bool isTheEnd = false;
 
         /// <summary>
         /// Сигнализирует всем потокам о перезапуске
         /// </summary>
-        static bool goRestart = false;
-
-        /// <summary>
-        /// Указывает, что все потоки закончили свою работу
-        /// </summary>
-        static bool allThreadsIsFinished = false;
+        internal static bool goRestart = false;
 
         /// <summary>
         /// Кол-во потоков, заканчивших свою работу
         /// </summary>
-        static int countFinishedThreads = 0;
+        internal static int countFinishedThreads = 0;
 
-
-        static bool isStop = true;
-        
-        public static AutoResetEvent evt = new AutoResetEvent(true);
+        /// <summary>
+        /// Указывают потоком приостановить работу
+        /// </summary>
+        internal static bool isStop = true;
 
         static void Main(string[] args)
         {
             Console.CancelKeyPress += Console_CancelKeyPress;
             Start();
 
-            do {
-                Program.isTheEnd = false;
+            ThreadModel.WaitHandler();
 
-                //Thread.Sleep(ThreadModel.GetMaxTimeToLive());// Ждем завершения всех потоков
-                
-
-                // Если все потоки закончили свою работу
-                if (Program.countFinishedThreads == ThreadModel.threads.Count)
-                {
-                    Console.WriteLine("\n\n\n");
-                    Console.Write("Продолжить запуск потоков ?[Y/N]: ");
-                    var ans = InputHellper.GetAnswer();
-                    Program.countFinishedThreads = 0;
-                    Program.allThreadsIsFinished = true;
-                    Console.WriteLine();
-                    if (ans == 'Y')
-                    {
-                        Console.WriteLine("\nНажмите любую клавишу для продолжения");
-                        Console.ReadKey();
-                        Console.Clear();
-                        Restart();
-                        Program.isTheEnd = false;
-                        Program.goRestart = true;
-                    }
-                    else
-                    {
-                        Program.isTheEnd = true;
-                        Program.goRestart = false;                    
-                    }
-                    Program.isStop = false;
-                } else
-                {
-                    Program.allThreadsIsFinished = false;
-                }
-            } while(! isTheEnd);
-
-            while (ThreadModel.threads.Count != 0)
-            {
-                Thread.Sleep(1);
-            }
+            while (ThreadModel.threads.Count != 0) Thread.Sleep(1);
 
             ThreadModel.semaphore.Dispose();
             ThreadModel.semaphore.Close();
@@ -98,7 +56,7 @@ namespace ThreadsProject
         /// <summary>
         /// Перезапускает работу потоков изменяя время их жизни
         /// </summary>
-        private static void Restart()
+        internal static void Restart()
         {
 
         }
