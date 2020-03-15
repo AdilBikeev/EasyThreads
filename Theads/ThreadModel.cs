@@ -40,44 +40,5 @@ namespace ThreadsProject
             }
             return max;
         }
-    
-        /// <summary>
-        /// Метод для ожидания завершения всех потоков
-        /// </summary>
-        internal static void WaitHandler()
-        {
-            do
-            {
-                Program.isTheEnd = false;
-
-                //Thread.Sleep(ThreadModel.GetMaxTimeToLive());// Ждем завершения всех потоков
-
-
-                // Если все потоки закончили свою работу
-                if (Program.countFinishedThreads == ThreadModel.threads.Count)
-                {
-                    Console.WriteLine("\n\n\n");
-                    Console.Write("Продолжить запуск потоков ?[Y/N]: ");
-                    var ans = InputHellper.GetAnswer();
-                    Program.countFinishedThreads = 0;
-                    Console.WriteLine();
-                    if (ans == 'Y')
-                    {
-                        Console.WriteLine("\nНажмите любую клавишу для продолжения");
-                        Console.ReadKey();
-                        Console.Clear();
-                        Program.Restart();
-                        Program.isTheEnd = false;
-                        Program.goRestart = true;
-                    }
-                    else
-                    {
-                        Program.isTheEnd = true;
-                        Program.goRestart = false;
-                    }
-                    Program.isStop = false;
-                }
-            } while (!Program.isTheEnd);
-        }
     }
 }

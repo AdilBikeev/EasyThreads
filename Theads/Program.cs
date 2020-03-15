@@ -31,7 +31,7 @@ namespace ThreadsProject
             Console.CancelKeyPress += Console_CancelKeyPress;
             Start();
 
-            ThreadModel.WaitHandler();
+            ThreadModule.WaitHandler();
 
             while (ThreadModel.threads.Count != 0) Thread.Sleep(1);
 
@@ -51,14 +51,6 @@ namespace ThreadsProject
         {
             ThreadModule.InitThreads();
             ThreadModule.RunThreads();
-        }
-
-        /// <summary>
-        /// Перезапускает работу потоков изменяя время их жизни
-        /// </summary>
-        internal static void Restart()
-        {
-
         }
 
         /// <summary>

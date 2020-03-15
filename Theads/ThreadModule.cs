@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Linq;
 
 namespace ThreadsProject
 {
@@ -77,6 +78,68 @@ namespace ThreadsProject
             }
 
             return thread;
+        }
+
+        /// <summary>
+        /// Метод для ожидания завершения всех потоков
+        /// </summary>
+        internal static void WaitHandler()
+        {
+            do
+            {
+                Program.isTheEnd = false;
+
+                // Если все потоки закончили свою работу
+                if (Program.countFinishedThreads == ThreadModel.threads.Count)
+                {
+                    Console.WriteLine("\n\n\n");
+                    Console.Write("Продолжить запуск потоков ?[Y/N]: ");
+                    var ans = InputHellper.GetAnswer();
+                    Program.countFinishedThreads = 0;
+                    Console.WriteLine();
+                    if (ans == 'Y')
+                    {
+                        Console.WriteLine("\nНажмите любую клавишу для продолжения");
+                        Console.ReadKey();
+                        Console.Clear();
+                        ThreadModule.Restart();
+                        Program.isTheEnd = false;
+                        Program.goRestart = true;
+                    }
+                    else
+                    {
+                        Program.isTheEnd = true;
+                        Program.goRestart = false;
+                    }
+                    Program.isStop = false;
+                }
+            } while (!Program.isTheEnd);
+        }
+
+        /// <summary>
+        /// Перезапускает работу потоков изменяя время их жизни
+        /// </summary>
+        internal static void Restart()
+        {
+            try
+            {
+                Random random = new Random();
+
+                var lstDict = ThreadModel.threads.Keys.ToList();
+
+                foreach (var thread in lstDict)
+                {
+                    Console.Write($"Время жизни для потока #{thread.Name} в секундах: ");
+                    int timeToLive = ((int)(random.NextDouble() * 1000 % 20 + 1) * (int.Parse(thread.Name) + 1)) % maxTimeToLive; // ставим ограничение, чтобы поток не длился более maxTimeToLive секунд
+                    Console.WriteLine(timeToLive);
+                    ThreadModel.threads[thread] = timeToLive * 1000;
+                }
+                Console.WriteLine("\n\n\n");
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine($"Exception InitThreads[{Thread.CurrentThread.Name}]: {exc.Message}");
+            }
         }
     }
 }
