@@ -43,19 +43,22 @@ namespace ThreadsProject
         {
             char ans = ' ';
             char symbol;
+            bool ansExist = false; //указывает, что ответ уже был веден
 
             do
             {
                 symbol = Console.ReadKey(true).KeyChar;
-                if (symbol == 'Y' || symbol == 'N')
+                if (! ansExist && (symbol == 'Y' || symbol == 'N'))
                 {
                     ans = symbol;
                     Console.Write(symbol);
+                    ansExist = true;
                 }
                 else if (symbol == '\b' && ans != ' ')
                 {
                     ans = ' ';
                     Backspace();
+                    ansExist = false;
                 }
             } while (symbol != '\r' || ans == ' ');
 
