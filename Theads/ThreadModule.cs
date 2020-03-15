@@ -37,13 +37,15 @@ namespace ThreadsProject
 
             try
             {
+                Random random = new Random();
+
                 for (int i = 0; i < ThreadModel.countThread; i++)
                 {
-                    Console.Write($"Введите время жизни для потока #{i} в секундах: ");
-                    int timeToLive = int.Parse(InputHellper.GetNum()) * 1000;
-                    Console.WriteLine();
+                    Console.Write($"Время жизни для потока #{i} в секундах: ");
+                    int timeToLive = ((int)(random.NextDouble()*1000 % 20 + 1) * (i + 1)) % 20; // ставим ограничение, чтобы поток не длился более 20 секунд
+                    Console.WriteLine(timeToLive);
 
-                    ThreadModel.threads.Add(CreateThread(i.ToString()), timeToLive);
+                    ThreadModel.threads.Add(CreateThread(i.ToString()), timeToLive * 1000);
                 }
                 Console.WriteLine("\n\n\n");
             }
