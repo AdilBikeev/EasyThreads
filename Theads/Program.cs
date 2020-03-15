@@ -71,6 +71,14 @@ namespace ThreadsProject
                     Program.allThreadsIsFinished = false;
                 }
             } while(! isTheEnd);
+
+            while (ThreadModel.threads.Count != 0)
+            {
+                Thread.Sleep(1);
+            }
+
+            ThreadModel.semaphore.Dispose();
+            ThreadModel.semaphore.Close();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
