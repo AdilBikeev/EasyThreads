@@ -22,7 +22,7 @@ namespace ThreadsProject
         /// 1-ый аргумент отвечает за кол-во потоков, который будет хранить семафор
         /// 2-ой за максимальное допустимое число потоков, читающий один и тот же метод одновременно
         /// </summary>
-        internal static Semaphore semaphore = new Semaphore(countThread, countThread);
+        internal static Mutex mutex = new Mutex();
 
         /// <summary>
         /// Возвращает максимальное время жизни среди всех созданных потоков

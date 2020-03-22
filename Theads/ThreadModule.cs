@@ -8,7 +8,15 @@ namespace ThreadsProject
 {
     internal static class ThreadModule
     {
+        /// <summary>
+        /// Максимальное время жизни потока
+        /// </summary>
         private const int maxTimeToLive = 5;
+
+        /// <summary>
+        /// Сигнализирует главному потоку - нужно ли задать вопрос пользователю или нет
+        /// </summary>
+        internal static bool checkAns = false;
 
         /// <summary>
         /// Запускает все потоки
@@ -90,12 +98,11 @@ namespace ThreadsProject
                 Program.isTheEnd = false;
 
                 // Если все потоки закончили свою работу
-                if (Program.countFinishedThreads == ThreadModel.threads.Count)
+                if (ThreadModule.checkAns && Program.countFinishedThreads == ThreadModel.threads.Count)
                 {
                     Console.WriteLine("\n\n\n");
                     Console.Write("Продолжить запуск потоков ?[Y/N]: ");
                     var ans = InputHellper.GetAnswer();
-                    Program.countFinishedThreads = 0;
                     Console.WriteLine();
                     if (ans == 'Y')
                     {
@@ -111,7 +118,10 @@ namespace ThreadsProject
                         Program.isTheEnd = true;
                         Program.goRestart = false;
                     }
+                    Program.countFinishedThreads = 0;
                     Program.isStop = false;
+
+                    ThreadModule.checkAns = false;
                 }
             } while (!Program.isTheEnd);
         }

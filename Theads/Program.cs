@@ -31,12 +31,10 @@ namespace ThreadsProject
             Console.CancelKeyPress += Console_CancelKeyPress;
             Start();
 
-            ThreadModule.WaitHandler();
-
             while (ThreadModel.threads.Count != 0) Thread.Sleep(1);
 
-            ThreadModel.semaphore.Dispose();
-            ThreadModel.semaphore.Close();
+            ThreadModel.mutex.Dispose();
+            ThreadModel.mutex.Close();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
@@ -58,39 +56,53 @@ namespace ThreadsProject
         /// </summary>
         internal static void TargetThreadMethod()
         {
-            var isFirstStart = true;
             while (!Program.isTheEnd)
             {
-                if (isFirstStart ||  Program.goRestart)
-                {
-                    isFirstStart = false;
-                    try
-                    {
-                        ThreadModel.semaphore.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
-                        Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
-                        Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);
-                        Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу");
-                        
-                        countFinishedThreads++;
+                ThreadModel.mutex.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
 
-                        Program.isStop = true;
-                        while (Program.isStop)
-                        {
-                            Thread.Sleep(1);
-                        }
-                        ThreadModel.semaphore.Release();//освобождаем текущий поток
-                    }
-                    catch (Exception exc)
+                if(!Program.isTheEnd)
+                {
+                    Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+                    Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);
+                    Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу");
+                    countFinishedThreads++;
+                    if (countFinishedThreads == 5)
                     {
-                        Console.WriteLine($"TargetThreadMethod exception: {exc.Message}");
+                        countFinishedThreads = 0;
+                        Console.WriteLine("\n\n\n");
+                        Console.Write("Продолжить запуск потоков ?[Y/N]: ");
+                        var ans = InputHellper.GetAnswer();
+                        Console.WriteLine();
+                        if (ans == 'Y')
+                        {
+                            Console.WriteLine("\nНажмите любую клавишу для продолжения");
+                            Console.ReadKey();
+                            Console.Clear();
+                            ThreadModule.Restart();
+                        }
+                        else
+                        {
+                            Program.isTheEnd = true;
+                        }
                     }
                 }
-                
+                ThreadModel.mutex.ReleaseMutex();
             }
 
-            Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);//перед завершением потока - останавливаем поток на некоторое время
-            Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу");
-            ThreadModel.threads.Remove(Thread.CurrentThread);
+
+            try
+            {
+                ThreadModel.mutex.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
+                Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);//перед завершением потока - останавливаем поток на некоторое время
+                Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу");
+                ThreadModel.threads.Remove(Thread.CurrentThread);
+                ThreadModel.mutex.ReleaseMutex();
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine($"Exceptrion [{Thread.CurrentThread.Name}]: {exc.Message}");
+            }
+
         }
     }
 }
