@@ -111,6 +111,13 @@ namespace ThreadsProject
                     }
                     else
                     {
+                        Console.WriteLine("\nНажмите любую клавишу для продолжения");
+                        Console.ReadKey();
+                        Console.WriteLine("________________________________________________________________________________________________");
+                        Console.WriteLine("Обновление времени жизни потоков\n");
+                        ThreadModule.UpdateTimeToLive();
+                        Console.WriteLine("\n\n");
+
                         Program.isTheEnd = true;
                         Program.goRestart = false;
                     }
@@ -126,22 +133,31 @@ namespace ThreadsProject
         {
             try
             {
-                Random random = new Random();
-
-                var lstDict = ThreadModel.threads.Keys.ToList();
-
-                foreach (var thread in lstDict)
-                {
-                    Console.Write($"Время жизни для потока #{thread.Name} в секундах: ");
-                    int timeToLive = ((int)(random.NextDouble() * 1000 % 20 + 1) * (int.Parse(thread.Name) + 1)) % maxTimeToLive; // ставим ограничение, чтобы поток не длился более maxTimeToLive секунд
-                    Console.WriteLine(timeToLive);
-                    ThreadModel.threads[thread] = timeToLive * 1000;
-                }
+                Console.WriteLine("ПЕРЕЗАПУСК\n");
+                UpdateTimeToLive();
                 Console.WriteLine("\n\n\n");
             }
             catch (Exception exc)
             {
                 Console.WriteLine($"Exception InitThreads[{Thread.CurrentThread.Name}]: {exc.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Обновляет время жизни для каждого потока
+        /// </summary>
+        internal static void UpdateTimeToLive()
+        {
+            Random random = new Random();
+
+            var lstDict = ThreadModel.threads.Keys.ToList();
+
+            foreach (var thread in lstDict)
+            {
+                Console.Write($"Время жизни для потока #{thread.Name} в секундах: ");
+                int timeToLive = ((int)(random.NextDouble() * 1000 % 20 + 1) * (int.Parse(thread.Name) + 1)) % maxTimeToLive; // ставим ограничение, чтобы поток не длился более maxTimeToLive секунд
+                Console.WriteLine(timeToLive);
+                ThreadModel.threads[thread] = timeToLive * 1000;
             }
         }
     }
