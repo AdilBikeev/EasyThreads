@@ -8,6 +8,9 @@ namespace ThreadsProject
 {
     internal static class ThreadModule
     {
+        /// <summary>
+        /// Максимальное время жиизни потоков
+        /// </summary>
         private const int maxTimeToLive = 5;
 
         /// <summary>

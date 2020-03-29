@@ -66,9 +66,9 @@ namespace ThreadsProject
                     isFirstStart = false;
                     try
                     {
-                        Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
+                        Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm мин. ss с.  fffff мс.")})");
                         Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);
-                        Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
+                        Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу (Время: {DateTime.Now.ToString("mm мин. ss с.  fffff мс.")})");
                         
                         countFinishedThreads++;
 
@@ -86,9 +86,9 @@ namespace ThreadsProject
                 
             }
 
-            Console.WriteLine($"Начало завершения потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
+            Console.WriteLine($"Начало завершения потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm мин. ss с.  fffff мс.")})");
             Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);//перед завершением потока - останавливаем поток на некоторое время
-            Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
+            Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу (Время: {DateTime.Now.ToString("mm мин. ss с.  fffff мс.")})");
             ThreadModel.threads.Remove(Thread.CurrentThread);
         }
     }
