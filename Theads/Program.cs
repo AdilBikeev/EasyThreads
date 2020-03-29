@@ -35,8 +35,8 @@ namespace ThreadsProject
 
             while (ThreadModel.threads.Count != 0) Thread.Sleep(1);
 
-            ThreadModel.semaphore.Dispose();
-            ThreadModel.semaphore.Close();
+            ThreadModel.mutex.Dispose();
+            ThreadModel.mutex.Close();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
@@ -66,10 +66,9 @@ namespace ThreadsProject
                     isFirstStart = false;
                     try
                     {
-                        ThreadModel.semaphore.WaitOne();//Блокируем поток если оно превышает макс. число допустимых одновременно читающих потоков
-                        Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name}");
+                        Console.WriteLine($"Старт потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
                         Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);
-                        Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу");
+                        Console.WriteLine($"Поток #{Thread.CurrentThread.Name} закончил работу (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
                         
                         countFinishedThreads++;
 
@@ -78,7 +77,6 @@ namespace ThreadsProject
                         {
                             Thread.Sleep(1);
                         }
-                        ThreadModel.semaphore.Release();//освобождаем текущий поток
                     }
                     catch (Exception exc)
                     {
@@ -88,8 +86,9 @@ namespace ThreadsProject
                 
             }
 
+            Console.WriteLine($"Начало завершения потока #{Thread.CurrentThread.Name} (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
             Thread.Sleep(ThreadModel.threads[Thread.CurrentThread]);//перед завершением потока - останавливаем поток на некоторое время
-            Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу");
+            Console.WriteLine($"Поток #{Thread.CurrentThread.Name} ЗАВЕРШИЛ работу (Время: {DateTime.Now.ToString("mm:ss:fffff")})");
             ThreadModel.threads.Remove(Thread.CurrentThread);
         }
     }
